@@ -12,21 +12,28 @@ const spaceGrotesk = Space_Grotesk({
   preload: true,
 });
 
-// Body and label faces are not on the critical path — the display face is.
-// Skipping their preload keeps the render-blocking font request unblocked.
+// Body and label faces are preloaded as well: with `font-display: swap` the
+// first paint already uses the fallback, but the swap re-paints the text and
+// that repaint is what the largest contentful element is timestamped on.
+// Preloading them keeps the swap from landing late.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   display: "swap",
-  preload: false,
+  weight: ["400", "500"],
+  preload: true,
 });
 
+// The mono face only carries 11px labels, so it is pinned to a single static
+// weight: the variable file that also carried 500 was 47 kB of the ~100 kB
+// font budget and it was delaying the display face — the LCP element — from
+// arriving.
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500"],
-  preload: false,
+  weight: ["400"],
+  preload: true,
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";

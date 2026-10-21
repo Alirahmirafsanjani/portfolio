@@ -58,60 +58,67 @@ export function SplitText({
   const useCss = strategy === "css";
 
   return (
-    <span className={cn("inline-block", className)} aria-label={text}>
-      {tokens.map((token, i) => {
-        if (isWhitespace(token)) {
-          return <Fragment key={`sp-${i}`}>{token}</Fragment>;
-        }
+    <span className={cn("inline-block", className)}>
+      {/* The animated fragments are hidden from assistive tech and the plain
+          text below is announced instead. An `aria-label` would not work
+          here: the wrapper is a generic span with no role, and ARIA
+          attributes that name a generic element are prohibited. */}
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">
+        {tokens.map((token, i) => {
+          if (isWhitespace(token)) {
+            return <Fragment key={`sp-${i}`}>{token}</Fragment>;
+          }
 
-        const outerClassName = cn(
-          "inline-block",
-          useCss ? undefined : "will-change-transform",
-          gradient && "text-gradient",
-        );
+          const outerClassName = cn(
+            "inline-block",
+            useCss ? undefined : "will-change-transform",
+            gradient && "text-gradient",
+          );
 
-        if (useCss) {
+          if (useCss) {
+            return (
+              <span key={`${token}-${i}`} className={outerClassName}>
+                <span
+                  className="word-in inline-block"
+                  style={
+                    {
+                      "--word-delay": `${delay + staggerOrder[i] * stagger}s`,
+                    } as StyleVars
+                  }
+                >
+                  {token}
+                </span>
+              </span>
+            );
+          }
+
           return (
-            <span key={`${token}-${i}`} aria-hidden="true" className={outerClassName}>
-              <span
-                className="word-in inline-block"
-                style={
-                  {
-                    "--word-delay": `${delay + staggerOrder[i] * stagger}s`,
-                  } as StyleVars
-                }
+            <span key={`${token}-${i}`} className={outerClassName}>
+              <motion.span
+                className="inline-block will-change-transform"
+                initial={{
+                  opacity: 0,
+                  y: reduced ? "0em" : "0.55em",
+                  filter: reduced ? "blur(0px)" : "blur(8px)",
+                }}
+                animate={{
+                  opacity: 1,
+                  y: "0em",
+                  filter: "blur(0px)",
+                }}
+                transition={{
+                  duration: reduced ? 0.2 : 0.85,
+                  delay: reduced ? 0 : delay + staggerOrder[i] * stagger,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
               >
                 {token}
-              </span>
+              </motion.span>
             </span>
           );
-        }
-
-        return (
-          <span key={`${token}-${i}`} aria-hidden="true" className={outerClassName}>
-            <motion.span
-              className="inline-block will-change-transform"
-              initial={{
-                opacity: 0,
-                y: reduced ? "0em" : "0.55em",
-                filter: reduced ? "blur(0px)" : "blur(8px)",
-              }}
-              animate={{
-                opacity: 1,
-                y: "0em",
-                filter: "blur(0px)",
-              }}
-              transition={{
-                duration: reduced ? 0.2 : 0.85,
-                delay: reduced ? 0 : delay + staggerOrder[i] * stagger,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {token}
-            </motion.span>
-          </span>
-        );
-      })}
+        })}
+      </span>
     </span>
   );
 }

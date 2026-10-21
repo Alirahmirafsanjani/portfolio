@@ -87,7 +87,6 @@ export function Nav() {
             type="button"
             onClick={() => scrollTo(0)}
             className="group flex items-center gap-2.5"
-            aria-label="Back to top"
           >
             <span className="relative grid size-9 place-items-center overflow-hidden rounded-lg border border-line-strong bg-surface font-display text-[0.8rem] font-semibold tracking-tight text-fg">
               <span className="relative z-10">RW</span>
@@ -96,6 +95,9 @@ export function Nav() {
             <span className="hidden font-display text-[0.9rem] font-medium tracking-tight text-fg sm:block">
               Raka Wijaya
             </span>
+            {/* The visible monogram and name already label the button; this
+                adds the action for assistive tech without replacing it. */}
+            <span className="sr-only">{t.footer.backToTop}</span>
           </button>
 
           {/* Desktop links */}
