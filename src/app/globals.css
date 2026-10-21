@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+@theme {
+  /* Surfaces */
+  --color-void: #05060a;
+  --color-surface: #0b0d14;
+  --color-surface-2: #11141f;
+  --color-surface-3: #171b29;
+
+  /* Lines */
+  --color-line: rgba(255, 255, 255, 0.07);
+  --color-line-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --color-fg: #e8eaf2;
+  --color-muted: #8a90a6;
+  --color-faint: #7c839c;
+  /* Near-black text for use on light surfaces.
+     Named `ink` rather than `base` because Tailwind's `text-base` already
+     means `font-size: 1rem` — a `text-base` colour class would be shadowed
+     by the built-in font-size utility. */
+  --color-ink: #05060a;
+  /* Accents */
+  --color-accent: #22d3ee;
+  --color-accent-2: #8b5cf6;
+  --color-accent-3: #f472b6;
+
+  /* Typography */
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layout */
+  --spacing-gutter: clamp(1.25rem, 5vw, 5rem);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* Lenis owns scrolling */
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 28%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-3);
+    border-radius: 99px;
+    border: 3px solid var(--color-void);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-accent) 40%, var(--color-surface-3));
+  }
+
+  /* Locked custom cursor: keep the native pointer for real interaction */
+  html[data-custom-cursor="on"],
+  html[data-custom-cursor="on"] * {
+    cursor: none !important;
+  }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 84rem;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(
+    110deg,
+    var(--color-fg) 0%,
+    var(--color-fg) 30%,
+    color-mix(in oklab, var(--color-accent) 75%, white) 55%,
+    var(--color-accent-2) 85%,
+    var(--color-fg) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+@utility mask-fade-b {
+  mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+}
+
+/* Section eyebrow label: [01] / ABOUT */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-8%, -6%, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(10%, 4%, 0) scale(1.15);
+  }
+  66% {
+    transform: translate3d(-4%, 10%, 0) scale(0.95);
+  }
+  100% {
+    transform: translate3d(-8%, -6%, 0) scale(1);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.72);
+  }
+}
+
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   ENTRANCE ANIMATIONS
+
+   These run on CSS, not on JavaScript. The hero is the LCP
+   candidate, and an element that starts at `opacity: 0` inside a
+   Motion `initial` prop is invisible until the bundle has been
+   parsed, executed and hydrated — which pushed LCP to ~3.2s on a
+   throttled phone. A CSS animation starts as soon as the stylesheet
+   is parsed, so the headline paints in well under a second.
+   ============================================================ */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.55em, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@utility rise-in {
+  animation: rise-in var(--rise-duration, 0.8s) var(--ease-out-expo)
+    var(--rise-delay, 0s) both;
+}
+
+@utility word-in {
+  animation: word-in var(--word-duration, 0.85s) var(--ease-out-expo)
+    var(--word-delay, 0s) both;
+}
+
+@utility marquee-track {
+  animation-name: marquee-left;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@utility marquee-track-reverse {
+  animation-name: marquee-right;
+}
+
+/* ============================================================
+   REDUCED MOTION — hard global guard
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
