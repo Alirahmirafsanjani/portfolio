@@ -1,0 +1,17 @@
+# Build output is produced on Vercel, so the local copy is dead weight.
+.next
+out
+build
+
+# Dependencies are installed by Vercel.
+node_modules
+
+# Local secrets must never be uploaded. `.env.example` is documentation and
+# stays in the repository, but it is not needed for the build either.
+.env*
+!.env.example
+
+# Editor / OS noise
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
