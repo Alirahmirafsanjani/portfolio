@@ -133,13 +133,27 @@ Repository: <https://github.com/Alirahmirafsanjani/portfolio>
 | --- | --- |
 | Production URL | <https://portfolio-tau-teal-27.vercel.app> |
 | Alternate alias | <https://portfolio-alirahmirafsanjani.vercel.app> |
+| Custom domain | `rafsanjaniali.web.id` |
 | Vercel project | `portfolio` (team `alirahmirafsanjani`, hobby) |
 
-The project is live. `NEXT_PUBLIC_SITE_URL` is set for both the Production and
-Preview environments, so the canonical URL, the sitemap, `robots.txt` and the
-Open Graph image all resolve to the production origin.
+`NEXT_PUBLIC_SITE_URL` is set for both the Production and Preview environments
+to `https://rafsanjaniali.web.id`, so the canonical URL, the sitemap,
+`robots.txt` and the Open Graph image all resolve to the custom domain.
 
 Every route is prerendered except `/sitemap.xml`, which is rendered on demand.
+
+### Pointing the custom domain at Vercel
+
+The domain is registered on the Vercel project, but its DNS still points at the
+old GitHub Pages site. Replace the record at the `web.id` DNS panel:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| CNAME | `rafsanjaniali.web.id` | `cname.vercel-dns.com` |
+
+(The current record is an A record to `185.199.108.153`, which is GitHub
+Pages — remove it.) Vercel issues the TLS certificate automatically once the
+domain resolves to it.
 
 ### Deploying from the command line
 
