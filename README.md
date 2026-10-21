@@ -96,6 +96,13 @@ production build:
 Supporting metrics: FCP 913 ms, LCP 3.35 s, Speed Index 1.55 s, TBT 147 ms,
 TTFB 457 ms.
 
+The same run against the deployed URL scores the same (Performance 91,
+Accessibility 100). One of three runs against the live site recorded a
+cumulative layout shift of 0.0018 — the moment Space Grotesk swaps in, the
+baseline of the headline moves by a fraction of a pixel. The keyframes only
+touch `opacity` and `transform`, so nothing else can shift; the threshold for
+a "good" score is 0.1.
+
 ## Performance notes
 
 The largest contentful element is the hero headline, and it is painted with the
@@ -122,10 +129,43 @@ viewport-sized layer on every paint.
 
 Repository: <https://github.com/Alirahmirafsanjani/portfolio>
 
-1. Import the repository in Vercel (framework preset: Next.js — everything else
-   is default).
-2. Set `NEXT_PUBLIC_SITE_URL` to the production origin so canonical URLs, the
-   sitemap and the OG image resolve to the right host.
-3. Deploy. Every route is prerendered except `/sitemap.xml`, which is rendered
-   on demand.
+| | |
+| --- | --- |
+| Production URL | <https://portfolio-tau-teal-27.vercel.app> |
+| Alternate alias | <https://portfolio-alirahmirafsanjani.vercel.app> |
+| Vercel project | `portfolio` (team `alirahmirafsanjani`, hobby) |
+
+The project is live. `NEXT_PUBLIC_SITE_URL` is set for both the Production and
+Preview environments, so the canonical URL, the sitemap, `robots.txt` and the
+Open Graph image all resolve to the production origin.
+
+Every route is prerendered except `/sitemap.xml`, which is rendered on demand.
+
+### Deploying from the command line
+
+```bash
+VERCEL_TOKEN=<token> npx vercel@latest --yes --prod --scope alirahmirafsanjani
+```
+
+`--archive=tgz` is worth adding for this project: the upload is a single
+compressed archive, which keeps the transfer small.
+
+### Enabling automatic deploys
+
+Push-to-deploy is not wired up yet. The Vercel GitHub App has to be installed
+on the GitHub account first — Vercel refuses the connection otherwise:
+
+> To link a GitHub repository, you need to install the GitHub integration first.
+
+Install it at <https://github.com/apps/vercel> (grant it access to the
+`portfolio` repository), then run:
+
+```bash
+npx vercel@latest git connect https://github.com/Alirahmirafsanjani/portfolio \
+  --token=<token> --scope alirahmirafsanjani
+```
+
+After that, every push to `main` deploys on its own and the build reads
+`NEXT_PUBLIC_SITE_URL` from the project settings.
+
 
