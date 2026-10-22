@@ -56,6 +56,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Raka Wijaya" }],
   creator: "Raka Wijaya",
+  // `metadataBase` resolves the relative path; without an explicit canonical,
+  // a crawler sees the same document on the custom domain and on the
+  // `*.vercel.app` aliases with nothing to tell them apart.
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
